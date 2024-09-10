@@ -2,20 +2,43 @@
 {% extends "base.html" %}
 
 {% block content %}
-  {% for birthday in birthdays %}
-    <div> <!-- Обернём каждую запись в тег div -->
-      <div> <!-- Текст обернём в отдельный вложенный div -->
-        {{ birthday.first_name }} {{ birthday.last_name }} - {{ birthday.birthday }}
+{% comment %}
+После добавления пагинации во view-функции необходимо поправить и HTML-шаблон birthday/birthday_list.html: 
+заменить название переменной birthdays в {% for birthday in birthdays %} на page_obj — 
+ведь список объектов теперь передаётся в page_obj.
+{% endcomment %}
+  {% for birthday in page_obj %}
+
+    <!-- Добавим класс row: каждая запись — это строка -->
+    <div class="row">
+      <!-- Первая "колонка" в строке, её ширина — 2/12 -->
+      <div class="col-2">  
+        {% if birthday.image %}
+          <!-- У объекта картинки image есть атрибут url — его и укажем в src -->
+          <img src="{{ birthday.image.url }}" height="100">
+        {% endif %}
       </div>
-      <!-- Ссылку тоже обернём в div; адрес ссылки
-        указываем через namespace:name -->
-      <div>
-        <a href="{% url 'birthday:edit' birthday.id %}">Изменить запись</a>
-        <a href="{% url 'birthday:delete' birthday.id %}">Удалить запись</a>
+
+      <!-- Вторая "колонка" в строке, её ширина — 10/12 -->
+      <!-- Обернём каждую запись в тег div --> 
+      <div class="col-10">  
+        <div> <!-- Текст обернём в отдельный вложенный div -->
+          {{ birthday.first_name }} {{ birthday.last_name }} — {{ birthday.birthday }}
+        </div>
+        <div> 
+          <!-- Ссылку тоже обернём в div; адрес ссылки
+          указываем через namespace:name -->
+          <a href="{% url 'birthday:edit' birthday.id %}">Изменить запись</a> | <a href="{% url 'birthday:delete' birthday.id %}">Удалить запись</a>
+        </div>
       </div>
       {% if not forloop.last %}
-        <hr>
+        <!-- Класс mt-3 устанавливает отступ сверху (margin-top) в 30 px -->
+        <hr class="mt-3"> 
       {% endif %}
     </div>
   {% endfor %}
+
+  <!-- Подключаем пагинатор -->
+  {% include "includes/paginator.html" %}
+
 {% endblock %}

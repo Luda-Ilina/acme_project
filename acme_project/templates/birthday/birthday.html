@@ -38,7 +38,7 @@
   {% endcomment %}
 
 
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
           <!-- Добавьте тег csrf_token. Без него POST-запрос будет отклонён. -->
           {% csrf_token %}
           {% if not "/delete/" in request.path %}
