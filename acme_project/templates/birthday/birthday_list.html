@@ -29,7 +29,11 @@
           <!-- Ссылку тоже обернём в div; адрес ссылки
           указываем через namespace:name -->
           <a href="{% url 'birthday:detail' birthday.id %}">Сколько до дня рождения?</a><br>
-          <a href="{% url 'birthday:edit' birthday.id %}">Изменить запись</a> | <a href="{% url 'birthday:delete' birthday.id %}">Удалить запись</a>
+          {% if birthday.author == user %}
+            <div>
+            <a href="{% url 'birthday:edit' birthday.id %}">Изменить запись</a> | <a href="{% url 'birthday:delete' birthday.id %}">Удалить запись</a>
+            </div>
+          {% endif %}
         </div>
       </div>
       {% if not forloop.last %}
